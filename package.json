@@ -1,0 +1,28 @@
+{
+  "name": "birthday-crowdfunder",
+  "version": "1.0.0",
+  "description": "how to setup a website to accept crowd funded gifts",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "paypal",
+    "payment",
+    "gateway",
+    "nodejs",
+    "payment",
+    "integration",
+    "in",
+    "web",
+    "apps"
+  ],
+  "author": "@nodejsera",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.3",
+    "paypal-rest-sdk": "^1.7.1"
+  }
+}
