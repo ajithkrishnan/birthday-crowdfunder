@@ -5,11 +5,13 @@ services:
             image: latest123/login-app
             restart: on-failure
             build: .
+            volumes:
+                - .:/app
             ports:
                 - "3000:3000"
             depends_on:
                 - mongo
-            command: ["./wait-for-it/wait-for-it.sh", "mongo:27017", "--", "node", "app.js"]
+            command: bash -c "cd /app && npm install && ./wait-for-it/wait-for-it.sh mongo:27017 -- node app.js"
         mongo:
             container_name: mongo
             image: mongo
@@ -18,3 +20,4 @@ services:
             ports:
                 - '27017:27017'
 
+                  #            command: ["./wait-for-it/wait-for-it.sh", "mongo:27017", "--", "node", "app.js"]
