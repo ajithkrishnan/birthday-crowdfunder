@@ -1,10 +1,9 @@
 version: "3"
 services:
         login-app:
-            container_name: login-app
-            image: latest123/login-app
+            container_name: crowdfunder-app
+            image: node:latest
             restart: on-failure
-            build: .
             volumes:
                 - .:/app
             ports:
@@ -20,4 +19,3 @@ services:
             ports:
                 - '27017:27017'
 
-                  #            command: ["./wait-for-it/wait-for-it.sh", "mongo:27017", "--", "node", "app.js"]
