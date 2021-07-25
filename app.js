@@ -10,16 +10,23 @@ var express            = require("express"),
  paypal                = require('paypal-rest-sdk'),
  passportLocalMongoose = require("passport-local-mongoose");
 
-mongoose.Promise = global.Promise;
-
-mongoose.connect("mongodb://mongo:27017/user_cred");
-
+const ejs = require('ejs');
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({extended: true}));
+// set public directory to serve static html files 
+//app.use('/', express.static(path.join(__dirname, 'public'))); 
+app.use(express.static('public'));
+
+app.set('view engine', 'ejs');
+
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb://mongo:27017/user_cred");
+USERDATA = {};
+USERDATA.body = "";
 
 var donattionSchema = new mongoose.Schema({
-    amount: String,
+    amount: Number,
     currency: String,
     description: String
 });
@@ -43,19 +50,35 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
             }
         }
         
-        paypal.configure(config.api);
-       
-        // set public directory to serve static html files 
-        app.use('/', express.static(path.join(__dirname, 'public'))); 
+        paypal.configure(config.api);       
 
         // redirect to store when user hits http://localhost:
         app.get('/' , (req , res) => {
-            res.redirect('/index.html'); 
-        })
+            //res.redirect('/index.html'); 
+            var curr_amount = 123;
+            User.find({}, {amount:1, _id:0}, function(err, docs){
+                if(err) res.join(err);
+                else {
+                    var total = 0;
+                    var count = 0;
+                    var perc = 0;
+                    function sumAmounts(value) {
+                        total += value['amount'];
+                        count += 1;
+                    }
+                    docs.forEach(sumAmounts)
+                    //document.getElementsByClassName("progress-bar")[0].setAttribute("style", "width:75%");     
+                    console.log(total);               
+                    perc = total/400 * 100;
+                    res.render('pages/index', { curr_amount: total, count: count, curr_perc: perc});                    
+                }
+            });             
+        });
 
         app.get('/fund', (req, res) => {
-            res.redirect('index-new.html');
-        })
+            //res.redirect('/payment-form.html'); 
+            res.render('pages/form');
+        });
 
         // start payment process 
         app.post('/paynow' , ( req , res ) => {
@@ -83,8 +106,9 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
             // call the create Pay method 
             createPay( payment ) 
                 .then( ( transaction ) => {
-                    var userData = new User(req.body);
-                    userData.save();
+                    USERDATA.body = new User(req.body);
+                    //var userData = new User(req.body);
+                    //userData.save();
                     console.log("data saved!");
                     var id = transaction.id; 
                     var links = transaction.links;
@@ -106,13 +130,14 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
         // success page 
         app.get('/success' , (req ,res ) => {
             console.log(req.query); 
-            res.redirect('/success.html'); 
+            USERDATA.body.save();
+            res.render('pages/success'); 
         })
 
         // error page 
         app.get('/err' , (req , res) => {
             console.log(req.query); 
-            res.redirect('/err.html'); 
+            res.render('pages/err.html'); 
         })
 
         // app listens on 3000 port 
