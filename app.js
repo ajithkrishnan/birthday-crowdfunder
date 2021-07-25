@@ -54,23 +54,23 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
 
         // redirect to store when user hits http://localhost:
         app.get('/' , (req , res) => {
-            //res.redirect('/index.html'); 
-            var curr_amount = 123;
+            //res.redirect('/index.html');             
             User.find({}, {amount:1, _id:0}, function(err, docs){
                 if(err) res.join(err);
                 else {
-                    var total = 0;
-                    var count = 0;
-                    var perc = 0;
+                    var curr_amount = 0;
+                     count = 0,
+                     total = 400,
+                     perc = 0;
                     function sumAmounts(value) {
-                        total += value['amount'];
+                        curr_amount += value['amount'];
                         count += 1;
                     }
                     docs.forEach(sumAmounts)
                     //document.getElementsByClassName("progress-bar")[0].setAttribute("style", "width:75%");     
-                    console.log(total);               
-                    perc = total/400 * 100;
-                    res.render('pages/index', { curr_amount: total, count: count, curr_perc: perc});                    
+                              
+                    perc = curr_amount/total * 100;
+                    res.render('pages/index', { curr_amount: curr_amount, count: count, curr_perc: perc, total: total});                    
                 }
             });             
         });
