@@ -43,8 +43,8 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
         // paypal auth configuration
         var config = {            
             "api" : {
-            "host" : "api.sandbox.paypal.com",
-            "mode" : "sandbox",            
+            "schema": "https",
+            "mode" : "live",            
             'client_id': client_details.client_id, // please provide your client id here 
             'client_secret': client_details.client_secret // provide your client secret here
             }
@@ -137,7 +137,7 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
         // error page 
         app.get('/err' , (req , res) => {
             console.log(req.query); 
-            res.render('pages/err.html'); 
+            res.render('pages/err'); 
         })
 
         // app listens on 3000 port 
