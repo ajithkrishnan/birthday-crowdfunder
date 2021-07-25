@@ -1,0 +1,20 @@
+version: "3"
+services:
+        login-app:
+            container_name: login-app
+            image: latest123/login-app
+            restart: on-failure
+            build: .
+            ports:
+                - "3000:3000"
+            depends_on:
+                - mongo
+            command: ["./wait-for-it/wait-for-it.sh", "mongo:27017", "--", "node", "app.js"]
+        mongo:
+            container_name: mongo
+            image: mongo
+            volumes:
+                - ./data:/data/db
+            ports:
+                - '27017:27017'
+

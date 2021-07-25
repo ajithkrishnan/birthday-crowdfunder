@@ -1,16 +1,22 @@
 // import the required packages 
-var fs = require('fs');
-var express = require('express'); 
-var path = require('path'); 
-var app = express(); 
-var paypal = require('paypal-rest-sdk');
-var bodyParser = require('body-parser');
-app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({extended: true}));
-var mongoose = require('mongoose');
+var express            = require("express"),
+ app                   = express(),
+ mongoose              = require("mongoose"),
+ bodyParser            = require('body-parser'),
+ passport              = require("passport"),
+ LocalStrategy         = require("passport-local"),
+ fs                    = require('fs'),
+ path                  = require('path'), 
+ paypal                = require('paypal-rest-sdk'),
+ passportLocalMongoose = require("passport-local-mongoose");
+
 mongoose.Promise = global.Promise;
 
-mongoose.connect("mongodb://localhost:27017/birthday-crowdfunder");
+mongoose.connect("mongodb://mongo:27017/user_cred");
+
+
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({extended: true}));
 
 var donattionSchema = new mongoose.Schema({
     amount: String,
