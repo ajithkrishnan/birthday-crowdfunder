@@ -25,6 +25,7 @@ docker-compose up
 5. While signing into your Paypal account to make the test payment, use your **Personal Sandbox account** credentials.
 
 ### TODO
+- Edit Contents of index.ejs
 - Cleanup app.js
 - Implement option for checkout and cancel payment
 - Alter the style of form.ejs, success.ejs and err.ejs to be similar to index.ejs
