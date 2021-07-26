@@ -44,7 +44,7 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
         var config = {            
             "api" : {
             "schema": "https",
-            "mode" : "live",            
+            "mode" : "sandbox",            
             'client_id': client_details.client_id, // please provide your client id here 
             'client_secret': client_details.client_secret // provide your client secret here
             }
@@ -66,11 +66,20 @@ fs.readFile(__dirname+'/paypal_cred.json', 'utf8', function(err, data) {
                         curr_amount += value['amount'];
                         count += 1;
                     }
-                    docs.forEach(sumAmounts)
-                    //document.getElementsByClassName("progress-bar")[0].setAttribute("style", "width:75%");     
-                              
+                    docs.forEach(sumAmounts);                                   
                     perc = curr_amount/total * 100;
-                    res.render('pages/index', { curr_amount: curr_amount, count: count, curr_perc: perc, total: total});                    
+                    
+                    // Set the date we're counting down to
+                    var countDownDate = new Date("Jan 4, 2022 0:0:0").getTime();
+                    // Get today's date and time
+                    var now = new Date().getTime();
+                    // Find the distance between now and the count down date
+                    var distance = countDownDate - now;
+                    // Time calculations for days, hours, minutes and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+
+                    res.render('pages/index', { curr_amount: curr_amount, count: count, curr_perc: perc, total: total, countdown: days});                    
                 }
             });             
         });
